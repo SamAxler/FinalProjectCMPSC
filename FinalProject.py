@@ -5,7 +5,6 @@ import openrouteservice as ors
 import math
 import webbrowser
 
-
 coords = [
     [40.11733,-75.11176],
     [40.11894,-75.11933],
@@ -38,4 +37,6 @@ m.save('aee.html')
 def auto_open(url):
     webbrowser.open(url, new=2)
 
-auto_open('aee.html
+
+auto_open('aee.html')
+
