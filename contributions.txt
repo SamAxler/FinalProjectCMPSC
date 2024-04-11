@@ -1,4 +1,8 @@
 Samuel - Create and implement the UI for the interactable map, setup a way to auto-install dependancies (folium, ORS, etc.) for new computers who run the program, 
-Abdallah -
-Neville -
-David -
+Abdallah - 
+Neville - Graphs Class
+David - Djikstra's Algorithm 
+
+
+
+$
