@@ -1,6 +1,6 @@
 import folium
 import subprocess
-from IPython.core.display import display, HTML
+from IPython.display import display, HTML
 import openrouteservice as ors
 import math
 import webbrowser
