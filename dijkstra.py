@@ -52,8 +52,43 @@ class Dijkstra:
 
         print("Shortest Path:", shortest_path)
         return shortest_path
-      
+
+def calculate_distance(coord1, coord2):
+    '''
+    Calculate the distance between two coordinates using the Haversine formula.
+
+    Args:
+        coord1 (tuple): Latitude and longitude of the first coordinate in degrees.
+        coord2 (tuple): Latitude and longitude of the second coordinate in degrees.
+
+    Returns:
+        float: Distance between the two coordinates in meters.
+    '''
+    
+    #Haversine formula to calculate distance between coordinates
+    R = 6371000 #Earths radius in meters
+    lat1, lon2 = coord1
+    lat2, lon1 = coord2
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    delta_phi = math.radians(lat2 - lat1)
+    delta_lambda = math.radians(lon2 - lon1)
+    
+    a = math.sin(delta_phi / 2) * math.sin(delta_phi / 2) + math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2) * math.sin(delta_lambda / 2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    
+    distance = R * c
+    return distance
+
 '''
 sources:
-https://brilliant.org/wiki/dijkstras-short-path-finder/
+
+Dijkstras algorithm -
+1. https://brilliant.org/wiki/dijkstras-short-path-finder/
+
+Calculate distance (Haversine formula) - 
+1. https://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-and-distance-between-two-gps-points
+2. https://louwersj.medium.com/calculate-geographic-distances-in-python-with-the-haversine-method-ed99b41ff04b
+
 '''
+
