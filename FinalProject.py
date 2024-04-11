@@ -5,6 +5,12 @@ import openrouteservice as ors
 import math
 import webbrowser
 
+#if terminal command doesn't run use python instead of py
+
+# py -m pip install folium
+# py -m pip install openrouteservice
+# py -m pip install IPython
+
 client = ors.Client(key='5b3ce3597851110001cf62483d1d56a31e134c83851721865a6ac5c4')
 
 linepoints2 = [
@@ -26,11 +32,8 @@ lines_group = folium.FeatureGroup(name="Lines").add_to(m)
 
 route = client.directions(coordinates=linepoints2,profile='driving-car',format='geojson')
 folium.PolyLine(locations=[list(reversed(coord)) for coord in route['features'][0]['geometry']['coordinates']],color = "blue").add_to(m)
-m
 m.save('aee.html')
 def auto_open(url):
     webbrowser.open(url, new=2)
-
-
 
 auto_open('aee.html')
