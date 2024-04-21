@@ -11,8 +11,8 @@ class Dijkstra:
         Find the shortest path from the start_vertex to the end_vertex using Dijkstra's algorithm.
 
         Args:
-            start_vertex (tuple): The starting coordinate of the path.
-            end_vertex (tuple): The ending coordinate of the path.
+            start_vertex (tuple): The starting vertex (coordinate) of the path.
+            end_vertex (tuple): The ending vertex (coordinate) of the path.
 
         Returns:
             list: List of vertices (coordinates) representing the shortest path from
@@ -52,6 +52,7 @@ class Dijkstra:
 
         print("Shortest Path:", shortest_path)
         return shortest_path
+            
 
 def calculate_distance(coord1, coord2):
     '''
@@ -69,12 +70,12 @@ def calculate_distance(coord1, coord2):
     R = 6371000 #Earths radius in meters
     lat1, lon2 = coord1
     lat2, lon1 = coord2
-    phi1 = math.radians(lat1)
-    phi2 = math.radians(lat2)
-    delta_phi = math.radians(lat2 - lat1)
-    delta_lambda = math.radians(lon2 - lon1)
+    latitude_radians1 = math.radians(lat1)
+    latitude_radians2 = math.radians(lat2)
+    latitude_difference_radians = math.radians(lat2 - lat1)
+    longitude_difference_radians = math.radians(lon2 - lon1)
     
-    a = math.sin(delta_phi / 2) * math.sin(delta_phi / 2) + math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2) * math.sin(delta_lambda / 2)
+    a = math.sin(latitude_difference_radians / 2) * math.sin(latitude_difference_radians / 2) + math.cos(latitude_radians1) * math.cos(latitude_radians2) * math.sin(longitude_difference_radians / 2) * math.sin(longitude_difference_radians / 2)
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     
     distance = R * c
@@ -91,4 +92,3 @@ Calculate distance (Haversine formula) -
 2. https://louwersj.medium.com/calculate-geographic-distances-in-python-with-the-haversine-method-ed99b41ff04b
 
 '''
-

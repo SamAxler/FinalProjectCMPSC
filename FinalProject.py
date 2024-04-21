@@ -9,6 +9,10 @@ import math
 import webbrowser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+from WeightedGraph import *
+from dijkstra import *
+from osm import *
+
 #if terminal command doesn't run use python instead of py
 
 # py -m pip install folium
@@ -41,3 +45,5 @@ def auto_open(url):
     webbrowser.open(url, new=2)
 
 auto_open('aee.html')
+
+
