@@ -1,5 +1,5 @@
 Samuel - Create and implement the UI for the interactable map, setup a way to auto-install dependancies (folium, ORS, etc.) for new computers who run the program, 
-Abdallah - 
+Abdallah - .osm file reader: convert osm dataset to weighted graph, 
 Neville - Graphs Class
 David - Djikstra's Algorithm 
 
