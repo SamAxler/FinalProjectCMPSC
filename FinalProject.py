@@ -42,17 +42,4 @@ def auto_open(url):
 
 auto_open('aee.html')
 
-## Read .osm file + transer data to Graph 
-'''
-need to download the map.osm file (this has Abington data)
-'''
 
-filename = "map.osm"
-Abington = read_osm(filename)
-
-for node_id in Abington.nodes_iter():
-    node = Abington.node(node_id)
-    print("Node ID:", node_id)
-    print("Latitude:", node['lat'])
-    print("Longitude:", node['lon'])
-    print("")
