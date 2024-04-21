@@ -25,7 +25,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_9a81b9ca6320dc904feff3f42516b3a4 {
+                #map_790c5e521f41b376fb65aa8c8d24ddd7 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -39,18 +39,18 @@
 <body>
     
     
-            <div class="folium-map" id="map_9a81b9ca6320dc904feff3f42516b3a4" ></div>
+            <div class="folium-map" id="map_790c5e521f41b376fb65aa8c8d24ddd7" ></div>
         
 </body>
 <script>
     
     
-            var map_9a81b9ca6320dc904feff3f42516b3a4 = L.map(
-                "map_9a81b9ca6320dc904feff3f42516b3a4",
+            var map_790c5e521f41b376fb65aa8c8d24ddd7 = L.map(
+                "map_790c5e521f41b376fb65aa8c8d24ddd7",
                 {
-                    center: [51.083180198360026, 9.307220072053097],
+                    center: [40.11733, -75.11176],
                     crs: L.CRS.EPSG3857,
-                    zoom: 9,
+                    zoom: 14,
                     zoomControl: true,
                     preferCanvas: false,
                 }
@@ -60,36 +60,114 @@
 
         
     
-            var tile_layer_49076ce62e1dccca0cf3a25519d01c33 = L.tileLayer(
+            var tile_layer_e684e5a171d2648030590e7e58e2aa80 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
             );
         
     
-            tile_layer_49076ce62e1dccca0cf3a25519d01c33.addTo(map_9a81b9ca6320dc904feff3f42516b3a4);
+            tile_layer_e684e5a171d2648030590e7e58e2aa80.addTo(map_790c5e521f41b376fb65aa8c8d24ddd7);
         
     
-                var lat_lng_popup_11a193130f06dc117d7157b43d02cdbd = L.popup();
+                var lat_lng_popup_a6e7f3be24f44005e96e9eee581d838e = L.popup();
                 
             // custom code
+
+            var markers = [];
+
+            var layerGroup = new L.LayerGroup(),
+                    featureGroup = new L.FeatureGroup().addTo(layerGroup);
+            var layerControl = new L.control.layers({
+            'Main': layerGroup
+            //here i need to add new layer control
+            }, null, { collapsed: false }).addTo(map_790c5e521f41b376fb65aa8c8d24ddd7);
+
             function latLngPop(e) {
-                //lat_lng_popup_11a193130f06dc117d7157b43d02cdbd
-                //    .setLatLng(e.latlng)
-                //    .setContent("Latitude: " + e.latlng.lat.toFixed(4) +
-                //                "<br>Longitude: " + e.latlng.lng.toFixed(4))
-                //    .openOn(map_9a81b9ca6320dc904feff3f42516b3a4);
+                lat_lng_popup_a6e7f3be24f44005e96e9eee581d838e
+                    .setLatLng(e.latlng)
+                    .setContent(`
+                        lat: ${e.latlng.lat}, lng: ${e.latlng.lng}
+                        <button onClick="
+                            fetch('http://localhost:3001', {
+                                method: 'POST',
+                                mode: 'no-cors',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    lat: ${e.latlng.lat},
+                                    long: ${e.latlng.lng}
+                                })
+                            });
+                            markers.push([${e.latlng.lat},${e.latlng.lng}])
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
+                            layerGroup.clearLayers();
+                            layerGroup = new L.LayerGroup(),
+                                featureGroup = new L.FeatureGroup().addTo(layerGroup);
+                            layerControl = new L.control.layers({
+                                
+                                'Main': layerGroup
+                                //here i need to add new layer control
+                                }, null, { collapsed: false }).addTo(map_790c5e521f41b376fb65aa8c8d24ddd7);
+                            for(var i = 0;i<markers.length;i++)
+                            {
+                                L.marker(
+                                [markers[i][0], markers[i][1]],
+                                {}
+                            ).addTo(layerGroup);
+                            }
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
 
-                //console.log("Latitude: " + e.latlng.lat.toFixed(4));
-                //console.log("Longitude: " + e.latlng.lng.toFixed(4));
+                            
+                        "> Store Coordinate </button>
+                        <button onClick="
+                            fetch('http://localhost:3001', {
+                                method: 'POST',
+                                mode: 'no-cors',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    lat: ${e.latlng.lat},
+                                    long: ${e.latlng.lng}
+                                })
+                            });
+                            markers = [];
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
+                            layerGroup.clearLayers();
+                            layerGroup = new L.LayerGroup(),
+                                featureGroup = new L.FeatureGroup().addTo(layerGroup);
+                            layerControl = new L.control.layers({
+                                'Main': layerGroup
+                                //here i need to add new layer control
+                                }, null, { collapsed: false }).addTo(map_790c5e521f41b376fb65aa8c8d24ddd7);
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
 
-                L.marker(
-                    [e.latlng.lat, e.latlng.lng],
-                    {}
-                ).addTo(map_9a81b9ca6320dc904feff3f42516b3a4);
+
+                            
+                        "> Clear Map </button>
+
+                        <button onClick="
+                            fetch('http://localhost:3001', {
+                                method: 'POST',
+                                mode: 'no-cors',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: 'q'
+                            });
+                        "> Quit </button>
+                    `)
+                    .openOn(map_790c5e521f41b376fb65aa8c8d24ddd7);
             }
             // end custom code
     
-                map_9a81b9ca6320dc904feff3f42516b3a4.on('click', latLngPop);
+                map_790c5e521f41b376fb65aa8c8d24ddd7.on('click', latLngPop);
             
 </script>
 </html>
