@@ -9,9 +9,7 @@ import math
 import webbrowser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from WeightedGraph import *
-from dijkstra import *
-from osm import *
+from DirectedGraph import *
 
 #if terminal command doesn't run use python instead of py
 
@@ -46,4 +44,37 @@ def auto_open(url):
 
 auto_open('aee.html')
 
+#Shows application of OSM reader and DiGraph Creation
+
+def main():
+
+    # Prepare paths
+    root_folder = pathlib.Path(__file__).parent
+    data_folder = root_folder / 'data'
+    temp_folder = data_folder / 'temp'
+    local_osm_file = data_folder / 'saved_local_osm_data.map'
+    output_shp_folder = data_folder / 'output_shp'
+
+    # Download OSM file
+    osm_map_file_content = osmp.download_osm(left=-73.4244, bottom=45.4302, right=-73.4010, top=45.4466, cache=True, cacheTempDir=temp_folder.as_posix())
+
+    nodes, ways, oneway_ways = parse_osm(osm_map_file_content)
+    graph = construct_graph(nodes, ways, oneway_ways)
+
+    # 2 options to print graph:
+    # print_edges_with_weights(graph)
+    print(graph)
+
+
+    # Convert Digraph to networkx graph
+    nx_graph = nx.DiGraph()
+    nx_graph.add_edges_from(graph.edges())
+
+
+    # Display graph on matplotlib 
+    nx.draw(nx_graph, with_labels=True)
+    plt.show()
+
+if __name__ == "__main__":
+    main()
 
