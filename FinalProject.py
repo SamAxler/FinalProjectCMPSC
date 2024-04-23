@@ -44,8 +44,6 @@ def auto_open(url):
 
 auto_open('aee.html')
 
-#Shows application of OSM reader and DiGraph Creation
-
 def main():
 
     # Prepare paths
