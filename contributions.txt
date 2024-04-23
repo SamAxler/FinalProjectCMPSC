@@ -11,3 +11,6 @@ If the terminal command doesn't run use python instead of py
 python -m pip install folium
 python -m pip install openrouteservice
 python -m pip install IPython
+
+new:
+python -m pip install networkx[default]
