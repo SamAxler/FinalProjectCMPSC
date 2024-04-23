@@ -3,12 +3,15 @@
 <head>
     
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    
+    <py-config type="toml">
+        packages = ["openrouteservice"]
+    </py-config>
         <script>
             L_NO_TOUCH = false;
             L_DISABLE_3D = false;
         </script>
-    
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
     <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
     <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
@@ -37,11 +40,11 @@
         
 </head>
 <body>
-    
-    
+
             <div class="folium-map" id="map_790c5e521f41b376fb65aa8c8d24ddd7" ></div>
         
 </body>
+
 <script>
     
     
@@ -68,12 +71,25 @@
     
             tile_layer_e684e5a171d2648030590e7e58e2aa80.addTo(map_790c5e521f41b376fb65aa8c8d24ddd7);
         
-    
                 var lat_lng_popup_a6e7f3be24f44005e96e9eee581d838e = L.popup();
                 
             // custom code
+            var edges = [];
 
-            var markers = [];
+            function appendEdges(a,b){
+                edges.push([a,b]);
+            }
+            function clearEdges()
+            {
+                edges = [];
+            }
+
+            var markers = []
+
+            function getMarkerElement(a,b)
+            {
+                return markers[a][b];
+            }
 
             var layerGroup = new L.LayerGroup(),
                     featureGroup = new L.FeatureGroup().addTo(layerGroup);
@@ -87,19 +103,8 @@
                     .setLatLng(e.latlng)
                     .setContent(`
                         lat: ${e.latlng.lat}, lng: ${e.latlng.lng}
-                        <button onClick="
-                            fetch('http://localhost:3001', {
-                                method: 'POST',
-                                mode: 'no-cors',
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    lat: ${e.latlng.lat},
-                                    long: ${e.latlng.lng}
-                                })
-                            });
+                        <button id="button" onClick="
+                            
                             markers.push([${e.latlng.lat},${e.latlng.lng}])
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
@@ -122,19 +127,33 @@
 
                             
                         "> Store Coordinate </button>
+                        <button id="button" onClick="   
+                        map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
+                            layerGroup.clearLayers();
+                            layerGroup = new L.LayerGroup(),
+                                featureGroup = new L.FeatureGroup().addTo(layerGroup);
+                            layerControl = new L.control.layers({
+                                
+                                'Main': layerGroup
+                                //here i need to add new layer control
+                                }, null, { collapsed: false }).addTo(map_790c5e521f41b376fb65aa8c8d24ddd7);
+                            for(var i = 0;i<markers.length;i++)
+                            {
+                                L.marker(
+                                [markers[i][0], markers[i][1]],
+                                {}
+                            ).addTo(layerGroup);
+                            }
+                            console.log(edges)
+                            console.log(edges.length)
+                            L.polyline(locations=edges,color = 'blue').addTo(layerGroup);
+                    
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
+
+
+                        "> Create Path </button>
                         <button onClick="
-                            fetch('http://localhost:3001', {
-                                method: 'POST',
-                                mode: 'no-cors',
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    lat: ${e.latlng.lat},
-                                    long: ${e.latlng.lng}
-                                })
-                            });
                             markers = [];
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
@@ -150,23 +169,32 @@
 
                             
                         "> Clear Map </button>
+                        <div id="test-output"></div>
+                        <py-script>
+                            from pyodide.ffi import create_proxy
+                            from js import getMarkerElement,appendEdges,markers,clearEdges
+                            import openrouteservice as ors
+                            client = ors.Client(key='5b3ce3597851110001cf62483d1d56a31e134c83851721865a6ac5c4')
 
-                        <button onClick="
-                            fetch('http://localhost:3001', {
-                                method: 'POST',
-                                mode: 'no-cors',
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json'
-                                },
-                                body: 'q'
-                            });
-                        "> Quit </button>
+
+                            linepoints2 = []
+                            clearEdges()
+                            for i in range(0,len(markers)):
+                                linepoints2.append([getMarkerElement(i,1),getMarkerElement(i,0)])
+                            if(len(markers) >= 2):
+                                route = client.directions(coordinates=linepoints2,profile='driving-car',format='geojson')
+                                for coord in route['features'][0]['geometry']['coordinates']:
+                                    appendEdges(coord[1],coord[0])
+
+                            
+                        </py-script>
+
+                        
                     `)
                     .openOn(map_790c5e521f41b376fb65aa8c8d24ddd7);
             }
             // end custom code
-    
+
                 map_790c5e521f41b376fb65aa8c8d24ddd7.on('click', latLngPop);
             
 </script>
