@@ -19,6 +19,8 @@ class Dijkstra:
                   start_vertex to end_vertex.
         '''
         
+        print("Finding shortest path from ", start_vertex, " to ", end_vertex)
+        
         #initialize distances
         distances = {vertex: float('inf') for vertex in self.graph}
         distances[start_vertex] = 0
@@ -41,14 +43,23 @@ class Dijkstra:
         #reconstruct shortest path         
         shortest_path = [end_vertex]
         while shortest_path[-1] != start_vertex:
+            print("Current shortest path:", shortest_path)
             current_vertex = shortest_path[-1]
+            next_vertex = None
             for neighbor, weight in self.graph[current_vertex].items():
-                if distances[current_vertex] == distances[neighbor] + weight:
-                    shortest_path.append(neighbor)
-                    break
+                print("Checking neighbor:", neighbor)
+                if distances[current_vertex] + weight < distances[neighbor]:
+                    distances[neighbor] = distances[current_vertex] + weight
+                    next_vertex = neighbor
+            if next_vertex is None:
+                break
+            shortest_path.append(next_vertex)
+            print("Updated shortest path:", shortest_path)
+
 
         #reverse the path to get it from start to end
         shortest_path.reverse()
+
 
         print("Shortest Path:", shortest_path)
         return shortest_path
