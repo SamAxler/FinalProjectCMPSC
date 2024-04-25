@@ -90,3 +90,15 @@ class Dijkstra:
 
         return distance_miles
 
+
+'''
+sources:
+https://brilliant.org/wiki/dijkstras-short-path-finder/
+Dijkstras algorithm -
+1. https://brilliant.org/wiki/dijkstras-short-path-finder/
+Calculate distance (Haversine formula) - 
+1. https://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-and-distance-between-two-gps-points
+2. https://louwersj.medium.com/calculate-geographic-distances-in-python-with-the-haversine-method-ed99b41ff04b
+
+'''
+
