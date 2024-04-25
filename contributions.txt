@@ -1,7 +1,7 @@
 Samuel - Create and implement the UI for the interactable map (HTML), create a link between the HTML file and the Python files to be able to run the code on both
 Abdallah - OSM file downloader, OSM file parser, Haversine, DiGrraph creator from data from osm file. 
 Neville - Graphs Class
-David - Djikstra's Algorithm 
+David - Djikstra's Algorithm, haversine, calculating driving distance
 
 
 
