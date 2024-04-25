@@ -37,7 +37,7 @@ folium.Marker(location=list(start), icon=folium.Icon(color="red")).add_to(m)
 lines_group = folium.FeatureGroup(name="Lines").add_to(m)
 
 route = client.directions(coordinates=linepoints2,profile='driving-car',format='geojson')
-folium.PolyLine(locations=[list(reversed(coord)) for coord in route['features'][0]['geometry']['coordinates']],color = "blue").add_to(m)
+folium.PolyLine(locations=[list(reversed(coord)) for coord in route['features'][0]['geometry']['coordinates']],color = "red").add_to(m)
 m.save('aee.html')
 def auto_open(url):
     webbrowser.open(url, new=2)

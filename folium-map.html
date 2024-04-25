@@ -42,8 +42,10 @@
 <body>
 
             <div class="folium-map" id="map_790c5e521f41b376fb65aa8c8d24ddd7" ></div>
-        
+
+
 </body>
+
 
 <script>
     
@@ -75,7 +77,46 @@
                 
             // custom code
             var edges = [];
-
+            var mode = 'driving-car';
+            var simplifiedMode = "Driving";
+            var colorMode = "blue";
+            var duration = 0;
+            function carButtonPressed()
+            {
+                mode = 'driving-car';
+                simplifiedMode = "Driving";
+            }
+            function walkButtonPressed()
+            {
+                mode = 'foot-walking';
+                simplifiedMode = "Walking";
+            }
+            function bikingButtonPressed()
+            {
+                mode = 'cycling-road';
+                simplifiedMode = "Biking";
+            }
+            function hikingButtonPressed()
+            {
+                mode = 'foot-hiking';
+                simplifiedMode = "Hiking";
+            }
+            function setTimeString()
+            {
+                intDuration = Math.floor(duration);
+                console.log(intDuration);
+                var minutes = Math.floor(intDuration/60);
+                var seconds = intDuration%60;
+                console.log(minutes);
+                console.log(seconds);
+                return "Travel Time: " + minutes + " minutes , " + seconds + " seconds.";
+            }
+            function setDuration(a)
+            {
+                duration = a;
+                document.getElementById("time").textContent = setTimeString();
+                document.getElementById("mode").textContent = "Transportation Mode: "+simplifiedMode;
+            }
             function appendEdges(a,b){
                 edges.push([a,b]);
             }
@@ -83,16 +124,25 @@
             {
                 edges = [];
             }
-
+            function getMode()
+            {
+                return mode;
+            }
             var markers = []
 
             function getMarkerElement(a,b)
             {
-                return markers[a][b];
+                if(markers.length > 0)
+                {
+                    return markers[a][b];
+                }
+                else
+                {
+                    return 0;
+                }
             }
-
             var layerGroup = new L.LayerGroup(),
-                    featureGroup = new L.FeatureGroup().addTo(layerGroup);
+                    featureGroup = new L.FeatureGroup(control=false).addTo(layerGroup);
             var layerControl = new L.control.layers({
             'Main': layerGroup
             //here i need to add new layer control
@@ -103,7 +153,7 @@
                     .setLatLng(e.latlng)
                     .setContent(`
                         lat: ${e.latlng.lat}, lng: ${e.latlng.lng}
-                        <button id="button" onClick="
+                        <button id="add" onClick="
                             
                             markers.push([${e.latlng.lat},${e.latlng.lng}])
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
@@ -111,11 +161,6 @@
                             layerGroup.clearLayers();
                             layerGroup = new L.LayerGroup(),
                                 featureGroup = new L.FeatureGroup().addTo(layerGroup);
-                            layerControl = new L.control.layers({
-                                
-                                'Main': layerGroup
-                                //here i need to add new layer control
-                                }, null, { collapsed: false }).addTo(map_790c5e521f41b376fb65aa8c8d24ddd7);
                             for(var i = 0;i<markers.length;i++)
                             {
                                 L.marker(
@@ -127,17 +172,14 @@
 
                             
                         "> Store Coordinate </button>
-                        <button id="button" onClick="   
+                        <button id="path" onClick="   
+                        if(edges.length >= 1)
+                        {
                         map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
                             layerGroup.clearLayers();
                             layerGroup = new L.LayerGroup(),
                                 featureGroup = new L.FeatureGroup().addTo(layerGroup);
-                            layerControl = new L.control.layers({
-                                
-                                'Main': layerGroup
-                                //here i need to add new layer control
-                                }, null, { collapsed: false }).addTo(map_790c5e521f41b376fb65aa8c8d24ddd7);
                             for(var i = 0;i<markers.length;i++)
                             {
                                 L.marker(
@@ -147,51 +189,162 @@
                             }
                             console.log(edges)
                             console.log(edges.length)
-                            L.polyline(locations=edges,color = 'blue').addTo(layerGroup);
+                            console.log(colorMode)
+                            lines = L.polyline(locations=edges,color='#00FF00');
+                            lines.addTo(layerGroup);
                     
                             map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
-
-
+                        }
                         "> Create Path </button>
-                        <button onClick="
+                        <button id="clear" onClick="
                             markers = [];
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
                             layerGroup.clearLayers();
-                            layerGroup = new L.LayerGroup(),
+                            layerGroup = new L.LayerGroup(control=false),
+                            featureGroup = new L.FeatureGroup().addTo(layerGroup);
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
+
+                        "> Clear Map </button>
+
+                        <h5><span id = "mode"></span></h5>
+                        <div id="test-output">
+                            <button id = "driving" onClick ="carButtonPressed()
+
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
+                            layerGroup.clearLayers();
+                            layerGroup = new L.LayerGroup(control=false),
                                 featureGroup = new L.FeatureGroup().addTo(layerGroup);
-                            layerControl = new L.control.layers({
-                                'Main': layerGroup
-                                //here i need to add new layer control
-                                }, null, { collapsed: false }).addTo(map_790c5e521f41b376fb65aa8c8d24ddd7);
+                            for(var i = 0;i<markers.length;i++)
+                            {
+                                L.marker(
+                                [markers[i][0], markers[i][1]],
+                                {}
+                            ).addTo(layerGroup);
+                            }
                             map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
 
 
-                            
-                        "> Clear Map </button>
-                        <div id="test-output"></div>
+                            " >Driving </button>
+                            <button id = "walking" onClick ="walkButtonPressed()
+
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
+                            layerGroup.clearLayers();
+                            layerGroup = new L.LayerGroup(control=false),
+                                featureGroup = new L.FeatureGroup().addTo(layerGroup);
+
+                                for(var i = 0;i<markers.length;i++)
+                            {
+                                L.marker(
+                                [markers[i][0], markers[i][1]],
+                                {}
+                            ).addTo(layerGroup);
+                            }
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
+
+
+                            " >Walking </button>
+
+
+                            <button id = "hiking" onClick ="hikingButtonPressed()
+
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
+                            layerGroup.clearLayers();
+                            layerGroup = new L.LayerGroup(control=false),
+                                featureGroup = new L.FeatureGroup().addTo(layerGroup);
+
+                                for(var i = 0;i<markers.length;i++)
+                            {
+                                L.marker(
+                                [markers[i][0], markers[i][1]],
+                                {}
+                            ).addTo(layerGroup);
+                            }
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
+
+
+                            " >Hiking </button>
+
+
+                            <button id = "biking" onClick ="bikingButtonPressed()
+
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
+                            layerGroup.clearLayers();
+                            layerGroup = new L.LayerGroup(control=false),
+                                featureGroup = new L.FeatureGroup().addTo(layerGroup);
+
+                                for(var i = 0;i<markers.length;i++)
+                            {
+                                L.marker(
+                                [markers[i][0], markers[i][1]],
+                                {}
+                            ).addTo(layerGroup);
+                            }
+                            map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
+
+
+                            " >Biking </button>
+                    
+                            </div>
+                        <h6><span id = "time"></span></h6>
                         <py-script>
+
                             from pyodide.ffi import create_proxy
-                            from js import getMarkerElement,appendEdges,markers,clearEdges
+                            from js import getMarkerElement,appendEdges,markers,clearEdges,getMode,setDuration,document
                             import openrouteservice as ors
                             client = ors.Client(key='5b3ce3597851110001cf62483d1d56a31e134c83851721865a6ac5c4')
 
+                            def doOnClick(self):
+                                flag = False
+                                linepoints2 = []
+                                clearEdges()
+                                if(len(markers) > 0):
+                                    for i in range(0,len(markers)):
+                                        element1 = getMarkerElement(i,1)
+                                        element2 = getMarkerElement(i,0)
+                                        if(element2 == 0 or element1 == 0):
+                                            flag = True
+                                        else:
+                                            linepoints2.append([element1,element2])
 
-                            linepoints2 = []
-                            clearEdges()
-                            for i in range(0,len(markers)):
-                                linepoints2.append([getMarkerElement(i,1),getMarkerElement(i,0)])
-                            if(len(markers) >= 2):
-                                route = client.directions(coordinates=linepoints2,profile='driving-car',format='geojson')
-                                for coord in route['features'][0]['geometry']['coordinates']:
-                                    appendEdges(coord[1],coord[0])
+                                if(len(markers) >= 2 and not flag):
+                                    route = client.directions(coordinates=linepoints2,profile=getMode(),format='geojson')
+                                    time = route['features'][0]['properties']['summary']['duration']
+                                    setDuration(time)
+                                    for coord in route['features'][0]['geometry']['coordinates']:
+                                        appendEdges(coord[1],coord[0])
+                                else:
+                                    setDuration(0)
+                            doOnClick("")
+                            function_proxy = create_proxy(doOnClick)
+    
+                            e1 = document.getElementById("clear")
+                            e2 = document.getElementById("add")
+                            e3 = document.getElementById("path")
+                            e4 = document.getElementById("driving")
+                            e5 = document.getElementById("walking")
+                            e6 = document.getElementById("hiking")
+                            e7 = document.getElementById("biking")
+
+                            e1.addEventListener("click",function_proxy)
+                            e2.addEventListener("click",function_proxy)
+                            e3.addEventListener("click",function_proxy)
+                            e4.addEventListener("click",function_proxy)
+                            e5.addEventListener("click",function_proxy)
+                            e6.addEventListener("click",function_proxy)
+                            e7.addEventListener("click",function_proxy)
 
                             
                         </py-script>
-
+                        
                         
                     `)
                     .openOn(map_790c5e521f41b376fb65aa8c8d24ddd7);
+
             }
             // end custom code
 
