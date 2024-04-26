@@ -77,9 +77,17 @@
                 
             // custom code
             var edges = [];
+            var markers = [];
+            var markerIcons = [];
             var mode = 'driving-car';
             var simplifiedMode = "Driving";
-            var colorMode = "blue";
+            var colorMode = 'blue';
+            var iconMode = 'circle';
+            var preferenceMode = 'fastest';
+            var preferenceSimplified = 'Fastest';
+
+            var colorModeSimplified = 'Blue'
+            var iconModeSimplified = 'Circle';
             var duration = 0;
             function carButtonPressed()
             {
@@ -116,6 +124,112 @@
                 duration = a;
                 document.getElementById("time").textContent = setTimeString();
                 document.getElementById("mode").textContent = "Transportation Mode: "+simplifiedMode;
+                document.getElementById("icon").textContent = "Icon: " + iconModeSimplified;
+                document.getElementById("color").textContent = "Color: " + colorModeSimplified;
+                document.getElementById("preference").textContent = "Pathfinding Mode: " + preferenceSimplified;
+                setMarkerColors()
+            }
+            function setMarkerColors()
+            {
+                document.getElementById("m1").style = "background-color:#D3D3D3";
+                document.getElementById("m2").style = "background-color:#D3D3D3";
+                document.getElementById("m3").style = "background-color:#D3D3D3";
+                document.getElementById("m4").style = "background-color:#D3D3D3";
+                document.getElementById("m5").style = "background-color:#D3D3D3";
+                document.getElementById("m6").style = "background-color:#D3D3D3";
+                document.getElementById("m7").style = "background-color:#D3D3D3";
+                document.getElementById("m8").style = "background-color:#D3D3D3";
+                document.getElementById("m9").style = "background-color:#D3D3D3";
+                document.getElementById("c1").style = "background-color:#D3D3D3";
+                document.getElementById("c2").style = "background-color:#D3D3D3";
+                document.getElementById("c4").style = "background-color:#D3D3D3";
+                document.getElementById("c5").style = "background-color:#D3D3D3";
+                document.getElementById("c6").style = "background-color:#D3D3D3";
+
+                document.getElementById("driving").style = "background-color:#D3D3D3";
+                document.getElementById("biking").style = "background-color:#D3D3D3";
+                document.getElementById("walking").style = "background-color:#D3D3D3";
+                document.getElementById("hiking").style = "background-color:#D3D3D3";
+
+                document.getElementById("fastestB").style = "background-color:#D3D3D3";
+                document.getElementById("shortestB").style = "background-color:#D3D3D3";
+                document.getElementById("recommendedB").style = "background-color:#D3D3D3";
+       
+                switch(colorMode)
+                {
+                    case 'blue':
+                        document.getElementById("c1").style = "background-color:#ADE7A3";
+                        break;
+                    case 'red':
+                        document.getElementById("c2").style = "background-color:#ADE7A3";
+                        break;
+                    case 'green':
+                        document.getElementById("c4").style = "background-color:#ADE7A3";
+                        break;
+                    case 'orange':
+                        document.getElementById("c5").style = "background-color:#ADE7A3";
+                        break;
+                    case 'purple':
+                        document.getElementById("c6").style = "background-color:#ADE7A3";
+                        break;
+                }
+                switch(iconModeSimplified)
+                {
+                    case 'Circle':
+                        document.getElementById("m1").style = "background-color:#ADE7A3";
+                        break;
+                    case 'Star':
+                        document.getElementById("m2").style = "background-color:#ADE7A3";
+                        break;
+                    case 'Home':
+                        document.getElementById("m3").style = "background-color:#ADE7A3";
+                        break;
+                    case 'X Mark':
+                        document.getElementById("m4").style = "background-color:#ADE7A3";
+                        break;
+                    case 'Bell':
+                        document.getElementById("m5").style = "background-color:#ADE7A3";
+                        break;
+                    case 'Urgent':
+                        document.getElementById("m6").style = "background-color:#ADE7A3";
+                        break;
+                    case 'Store':
+                        document.getElementById("m7").style = "background-color:#ADE7A3";
+                        break;
+                    case 'Compass':
+                        document.getElementById("m8").style = "background-color:#ADE7A3";
+                        break;
+                    case 'School':
+                        document.getElementById("m9").style = "background-color:#ADE7A3";
+                        break;
+                }
+                switch(simplifiedMode)
+                {
+                    case 'Driving':
+                        document.getElementById("driving").style = "background-color:#ADE7A3";
+                        break;
+                    case 'Walking':
+                        document.getElementById("walking").style = "background-color:#ADE7A3";
+                        break;
+                    case 'Hiking':
+                        document.getElementById("hiking").style = "background-color:#ADE7A3";
+                        break;
+                    case 'Biking':
+                        document.getElementById("biking").style = "background-color:#ADE7A3";
+                        break;
+                }
+                switch(preferenceMode)
+                {
+                    case 'fastest':
+                        document.getElementById("fastestB").style = "background-color:#ADE7A3";
+                        break;
+                    case 'shortest':
+                        document.getElementById("shortestB").style = "background-color:#ADE7A3";
+                        break;
+                    case 'recommended':
+                        document.getElementById("recommendedB").style = "background-color:#ADE7A3";
+                        break;
+                }
             }
             function appendEdges(a,b){
                 edges.push([a,b]);
@@ -128,7 +242,10 @@
             {
                 return mode;
             }
-            var markers = []
+            function getPreferenceMode()
+            {
+                return preferenceMode;
+            }
 
             function getMarkerElement(a,b)
             {
@@ -141,13 +258,35 @@
                     return 0;
                 }
             }
+            function changeIconMarker(a,b)
+            {
+                iconMode = a;
+                iconModeSimplified = b;
+                document.getElementById("icon").textContent = "Icon: " + iconModeSimplified;
+                setMarkerColors()
+            }
+            function changePreference(a,b)
+            {
+                preferenceMode = a;
+                preferenceSimplified = b;
+                document.getElementById("preference").textContent = "Pathfinding Mode: " + preferenceSimplified;
+                setMarkerColors()
+            }
+            function changeIconColor(a,b)
+            {
+                colorMode = a;
+                colorModeSimplified = b;
+                document.getElementById("color").textContent = "Color: " + colorModeSimplified;
+                setMarkerColors()
+            }
+
+
             var layerGroup = new L.LayerGroup(),
                     featureGroup = new L.FeatureGroup(control=false).addTo(layerGroup);
             var layerControl = new L.control.layers({
             'Main': layerGroup
             //here i need to add new layer control
             }, null, { collapsed: false }).addTo(map_790c5e521f41b376fb65aa8c8d24ddd7);
-
             function latLngPop(e) {
                 lat_lng_popup_a6e7f3be24f44005e96e9eee581d838e
                     .setLatLng(e.latlng)
@@ -156,6 +295,12 @@
                         <button id="add" onClick="
                             
                             markers.push([${e.latlng.lat},${e.latlng.lng}])
+                            var myIcon = L.AwesomeMarkers.icon({
+                                prefix: 'fa',
+                                icon: iconMode,
+                                markerColor: colorMode
+                             });
+                            markerIcons.push(myIcon);
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
                             layerGroup.clearLayers();
@@ -164,8 +309,7 @@
                             for(var i = 0;i<markers.length;i++)
                             {
                                 L.marker(
-                                [markers[i][0], markers[i][1]],
-                                {}
+                                [markers[i][0], markers[i][1]],{icon:markerIcons[i]}
                             ).addTo(layerGroup);
                             }
                             map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
@@ -180,11 +324,10 @@
                             layerGroup.clearLayers();
                             layerGroup = new L.LayerGroup(),
                                 featureGroup = new L.FeatureGroup().addTo(layerGroup);
-                            for(var i = 0;i<markers.length;i++)
+                                for(var i = 0;i<markers.length;i++)
                             {
                                 L.marker(
-                                [markers[i][0], markers[i][1]],
-                                {}
+                                [markers[i][0], markers[i][1]],{icon:markerIcons[i]}
                             ).addTo(layerGroup);
                             }
                             console.log(edges)
@@ -198,6 +341,7 @@
                         "> Create Path </button>
                         <button id="clear" onClick="
                             markers = [];
+                            markerIcons = [];
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerGroup);
                             map_790c5e521f41b376fb65aa8c8d24ddd7.removeLayer(layerControl);
                             layerGroup.clearLayers();
@@ -216,11 +360,10 @@
                             layerGroup.clearLayers();
                             layerGroup = new L.LayerGroup(control=false),
                                 featureGroup = new L.FeatureGroup().addTo(layerGroup);
-                            for(var i = 0;i<markers.length;i++)
+                                for(var i = 0;i<markers.length;i++)
                             {
                                 L.marker(
-                                [markers[i][0], markers[i][1]],
-                                {}
+                                [markers[i][0], markers[i][1]],{icon:markerIcons[i]}
                             ).addTo(layerGroup);
                             }
                             map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
@@ -238,8 +381,7 @@
                                 for(var i = 0;i<markers.length;i++)
                             {
                                 L.marker(
-                                [markers[i][0], markers[i][1]],
-                                {}
+                                [markers[i][0], markers[i][1]],{icon:markerIcons[i]}
                             ).addTo(layerGroup);
                             }
                             map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
@@ -259,8 +401,7 @@
                                 for(var i = 0;i<markers.length;i++)
                             {
                                 L.marker(
-                                [markers[i][0], markers[i][1]],
-                                {}
+                                [markers[i][0], markers[i][1]],{icon:markerIcons[i]}
                             ).addTo(layerGroup);
                             }
                             map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
@@ -280,8 +421,7 @@
                                 for(var i = 0;i<markers.length;i++)
                             {
                                 L.marker(
-                                [markers[i][0], markers[i][1]],
-                                {}
+                                [markers[i][0], markers[i][1]],{icon:markerIcons[i]}
                             ).addTo(layerGroup);
                             }
                             map_790c5e521f41b376fb65aa8c8d24ddd7.addLayer(layerGroup);
@@ -290,14 +430,34 @@
                             " >Biking </button>
                     
                             </div>
-                        <h6><span id = "time"></span></h6>
+
+                        <h5><span id = "icon"></span></h5>
+                        <button id='m1' onClick ="changeIconMarker('circle','Circle')" >Circle</button>
+                        <button id='m2' onClick ="changeIconMarker('star','Star')" >Star</button>
+                        <button id='m3' onClick ="changeIconMarker('house','Home')" >Home</button>
+                        <button id='m4' onClick ="changeIconMarker('xmark','X Mark')" >X Mark</button>
+                        <button id='m5' onClick ="changeIconMarker('bell','Bell')" >Bell</button>
+                        <button id='m6' onClick ="changeIconMarker('circle-exclamation','Urgent')" >Urgent</button>
+                        <button id='m7' onClick ="changeIconMarker('cart-shopping','Store')" >Store</button>
+                        <button id='m8' onClick ="changeIconMarker('compass','Compass')" >Compass</button>
+                        <button id='m9' onClick ="changeIconMarker('school','School')" >School</button>
+                        <h5><span id = "color"></span></h5>
+                        <button id='c1' onClick ="changeIconColor('blue','Blue')" >Blue</button>
+                        <button id='c2' onClick ="changeIconColor('red','Red')" >Red</button>
+                        <button id='c4' onClick ="changeIconColor('green','Green')" >Green</button>
+                        <button id='c5' onClick ="changeIconColor('orange','Orange')" >Orange</button>
+                        <button id='c6' onClick ="changeIconColor('purple','Purple')" >Purple</button>
+                        <h5><span id = "preference"></span></h5>
+                        <button id='fastestB' onClick ="changePreference('fastest','Average Fastest')" >Average Fastest</button>
+                        <button id='shortestB' onClick ="changePreference('shortest','Shortest')" >Shortest</button>
+                        <button id='recommendedB' onClick ="changePreference('recommended','Recommended')" >Recommended</button>
+                        <h5><span id = "time"></span></h5>
                         <py-script>
 
                             from pyodide.ffi import create_proxy
-                            from js import getMarkerElement,appendEdges,markers,clearEdges,getMode,setDuration,document
+                            from js import getMarkerElement,appendEdges,markers,clearEdges,getMode,setDuration,document,getPreferenceMode
                             import openrouteservice as ors
                             client = ors.Client(key='5b3ce3597851110001cf62483d1d56a31e134c83851721865a6ac5c4')
-
                             def doOnClick(self):
                                 flag = False
                                 linepoints2 = []
@@ -312,13 +472,14 @@
                                             linepoints2.append([element1,element2])
 
                                 if(len(markers) >= 2 and not flag):
-                                    route = client.directions(coordinates=linepoints2,profile=getMode(),format='geojson')
+                                    route = client.directions(coordinates=linepoints2,profile=getMode(),format='geojson',preference=getPreferenceMode())
                                     time = route['features'][0]['properties']['summary']['duration']
                                     setDuration(time)
                                     for coord in route['features'][0]['geometry']['coordinates']:
                                         appendEdges(coord[1],coord[0])
                                 else:
                                     setDuration(0)
+                            
                             doOnClick("")
                             function_proxy = create_proxy(doOnClick)
     
@@ -330,6 +491,10 @@
                             e6 = document.getElementById("hiking")
                             e7 = document.getElementById("biking")
 
+                            p1 = document.getElementById("fastestB")
+                            p2 = document.getElementById("shortestB")
+                            p3 = document.getElementById("recommendedB")
+
                             e1.addEventListener("click",function_proxy)
                             e2.addEventListener("click",function_proxy)
                             e3.addEventListener("click",function_proxy)
@@ -337,6 +502,10 @@
                             e5.addEventListener("click",function_proxy)
                             e6.addEventListener("click",function_proxy)
                             e7.addEventListener("click",function_proxy)
+
+                            p1.addEventListener("click",function_proxy)
+                            p2.addEventListener("click",function_proxy)
+                            p3.addEventListener("click",function_proxy)
 
                             
                         </py-script>
