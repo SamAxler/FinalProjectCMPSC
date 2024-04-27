@@ -8,6 +8,7 @@ import openrouteservice as ors
 import math
 import webbrowser
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from dijkstra import Dijkstra
 
 from DirectedGraph import *
 
