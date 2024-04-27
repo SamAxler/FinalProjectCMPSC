@@ -109,6 +109,14 @@
                 mode = 'foot-hiking';
                 simplifiedMode = "Hiking";
             }
+            function setError()
+            {
+                document.getElementById("errors").textContent = "Error while loading OpenRouteService, please click again.";
+            }
+            function removeError()
+            {
+                document.getElementById("errors").textContent = "";
+            }
             function setTimeString()
             {
                 intDuration = Math.floor(duration);
@@ -432,6 +440,7 @@
                             </div>
 
                         <h5><span id = "icon"></span></h5>
+                        
                         <button id='m1' onClick ="changeIconMarker('circle','Circle')" >Circle</button>
                         <button id='m2' onClick ="changeIconMarker('star','Star')" >Star</button>
                         <button id='m3' onClick ="changeIconMarker('house','Home')" >Home</button>
@@ -452,12 +461,16 @@
                         <button id='shortestB' onClick ="changePreference('shortest','Shortest')" >Shortest</button>
                         <button id='recommendedB' onClick ="changePreference('recommended','Recommended')" >Recommended</button>
                         <h5><span id = "time"></span></h5>
+                        <h4><span id = "errors"></span></h4>
                         <py-script>
 
                             from pyodide.ffi import create_proxy
-                            from js import getMarkerElement,appendEdges,markers,clearEdges,getMode,setDuration,document,getPreferenceMode
+                            import asyncio
+                            from js import getMarkerElement,appendEdges,markers,clearEdges,getMode,setDuration,document,getPreferenceMode,setTimeout,setError,removeError
                             import openrouteservice as ors
                             client = ors.Client(key='5b3ce3597851110001cf62483d1d56a31e134c83851721865a6ac5c4')
+                            def doRoutes(linepoints2):
+                                return client.directions(coordinates=linepoints2,profile=getMode(),format='geojson',preference=getPreferenceMode())
                             def doOnClick(self):
                                 flag = False
                                 linepoints2 = []
@@ -472,15 +485,27 @@
                                             linepoints2.append([element1,element2])
 
                                 if(len(markers) >= 2 and not flag):
-                                    route = client.directions(coordinates=linepoints2,profile=getMode(),format='geojson',preference=getPreferenceMode())
-                                    time = route['features'][0]['properties']['summary']['duration']
+                                    route = []
+                                    time = 0
+                                    try:
+                                        route = doRoutes(linepoints2)
+                                        time = route['features'][0]['properties']['summary']['duration']
+                                    except:
+                                        route = []
+                                        time = 0
+            
                                     setDuration(time)
-                                    for coord in route['features'][0]['geometry']['coordinates']:
-                                        appendEdges(coord[1],coord[0])
+                                    if len(route)>1:
+                                        for coord in route['features'][0]['geometry']['coordinates']:
+                                            appendEdges(coord[1],coord[0])
+                                        removeError()
+                                    else:
+                                        setError()
                                 else:
                                     setDuration(0)
+
+                                    
                             
-                            doOnClick("")
                             function_proxy = create_proxy(doOnClick)
     
                             e1 = document.getElementById("clear")
@@ -506,6 +531,8 @@
                             p1.addEventListener("click",function_proxy)
                             p2.addEventListener("click",function_proxy)
                             p3.addEventListener("click",function_proxy)
+
+                            doOnClick(1)
 
                             
                         </py-script>
