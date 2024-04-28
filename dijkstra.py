@@ -1,6 +1,7 @@
 import copy
 import heapq
 import openrouteservice as ors
+from math import radians, sin, cos, sqrt, atan2
 
 class Dijkstra:
     def __init__(self, graph, client):
@@ -33,13 +34,14 @@ class Dijkstra:
         visited = set()  #Initialize a set to keep track of visited vertices
 
         while pq:
-            current_distance, current_vertex = heapq.heappop(pq)
+            current_distance, current_vertex = pq[0]
+            heapq.heappop(pq)
             visited.add(current_vertex)
             if current_distance > distances[current_vertex]:
                 continue
             for neighbor, _ in self.graph[current_vertex].items():
                 if neighbor not in visited:
-                    driving_distance = self.calculate_driving_distance(current_vertex, neighbor)
+                    driving_distance = self.calculate_haversine_distance(current_vertex, neighbor)
                     distance = current_distance + driving_distance
                     if distance < distances[neighbor]:
                         distances[neighbor] = distance
@@ -51,7 +53,7 @@ class Dijkstra:
             current_vertex = shortest_path[-1]
             next_vertex = None
             for neighbor, _ in self.graph[current_vertex].items():
-                driving_distance = self.calculate_driving_distance(current_vertex, neighbor)
+                driving_distance = self.calculate_haversine_distance(current_vertex, neighbor)
                 if distances[current_vertex] + driving_distance < distances[neighbor]:
                     distances[neighbor] = distances[current_vertex] + driving_distance
                     next_vertex = neighbor
@@ -64,6 +66,7 @@ class Dijkstra:
 
         return shortest_path
 
+    '''
     def calculate_driving_distance(self, start_coord, end_coord):
         '''
         Calculate the driving distance between two coordinates using OpenRouteService.
@@ -89,6 +92,52 @@ class Dijkstra:
         distance_miles = distance_meters * 0.000621371
 
         return distance_miles
+    '''
+
+    #Haversine distance
+    def calculate_haversine_distance(self, start_coord, end_coord):
+        '''
+        Calculate Haversine Distance
+
+        Args:
+            start_coord (tuple):
+            end_coord (tuple):
+
+        Returns:
+            float: havesine distance between to coordinates in kilometers
+        '''
+        R = 6371.0
+
+        lat1, lon1 = radians(start_coord[1]), radians(start_coord[0])
+        lat2, lon2 = radians(end_coord[1]), radians(end_coord[0])
+
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+
+        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        distance = R * c
+
+        return distance
+
+
+    def visualize_route(self, shortest_path):
+        '''
+        Visualize the route on a map using the OpenRouteService (ORS) Directions API.
+
+        Args:
+            shortest_path (list): List of vertices (coordinates) representing the shortest path.
+
+        Returns:
+            dict: Route information obtained from the ORS API.
+        '''
+        # Convert list of tuples to list of lists (required format for ORS)
+        coordinates = [[coord[0], coord[1]] for coord in shortest_path]
+
+        # Make API call to ORS Directions API
+        response = self.client.directions(coordinates=coordinates, profile='driving-car')
+
+        return response
 
 
 '''
