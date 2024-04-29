@@ -17,9 +17,18 @@ from DirectedGraph import *
 # py -m pip install folium
 # py -m pip install openrouteservice
 # py -m pip install IPython
+# py -m pip install selenium
 
-client = ors.Client(key='5b3ce3597851110001cf62483d1d56a31e134c83851721865a6ac5c4')
+'''
+This file:
 
+    1. Downloads a .osm file (creates cache)
+    2. Parses the file 
+    3. Creates a DiGraph
+    4. plots graph on matplotlib
+    5. ...
+
+'''
 linepoints2 = [
     [-75.11176,40.11733],
     [-75.11933,40.11894],
@@ -28,22 +37,6 @@ linepoints2 = [
 ]
 
 start = [40.11733,-75.11176]
-
-# visualize the points on a map
-m = folium.Map(location=list(start), tiles="cartodbpositron", zoom_start=12)
-for coord in linepoints2:
-    folium.Marker(location=list(reversed(coord))).add_to(m)
-folium.Marker(location=list(start), icon=folium.Icon(color="red")).add_to(m)
-
-lines_group = folium.FeatureGroup(name="Lines").add_to(m)
-
-route = client.directions(coordinates=linepoints2,profile='driving-car',format='geojson')
-folium.PolyLine(locations=[list(reversed(coord)) for coord in route['features'][0]['geometry']['coordinates']],color = "red").add_to(m)
-m.save('aee.html')
-def auto_open(url):
-    webbrowser.open(url, new=2)
-
-auto_open('aee.html')
 
 def main():
 
@@ -54,8 +47,8 @@ def main():
     local_osm_file = data_folder / 'saved_local_osm_data.map'
     output_shp_folder = data_folder / 'output_shp'
 
-    # Download OSM file
-    osm_map_file_content = osmp.download_osm(left=-73.4244, bottom=45.4302, right=-73.4010, top=45.4466, cache=True, cacheTempDir=temp_folder.as_posix())
+    # Download OSM file (Currently a 3 block radius around Penn State Abington)
+    osm_map_file_content = osmp.download_osm(left=-75.1206, bottom=40.1096, right=-75.1000, top=40.1209, cache=True, cacheTempDir=temp_folder.as_posix())
 
     nodes, ways, oneway_ways = parse_osm(osm_map_file_content)
     graph = construct_graph(nodes, ways, oneway_ways)
