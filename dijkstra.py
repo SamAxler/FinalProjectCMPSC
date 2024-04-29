@@ -66,7 +66,7 @@ class Dijkstra:
 
         return shortest_path
 
-    '''
+    
     def calculate_driving_distance(self, start_coord, end_coord):
         '''
         Calculate the driving distance between two coordinates using OpenRouteService.
@@ -92,7 +92,7 @@ class Dijkstra:
         distance_miles = distance_meters * 0.000621371
 
         return distance_miles
-    '''
+    
 
     #Haversine distance
     def calculate_haversine_distance(self, start_coord, end_coord):
